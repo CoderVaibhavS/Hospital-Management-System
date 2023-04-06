@@ -1,0 +1,9 @@
+CREATE DATABASE hospital;
+USE hospital;
+CREATE TABLE patient (
+patient_id CHAR(10) NOT NULL PRIMARY KEY,
+name VARCHAR(20) NOT NULL,
+age INT NOT NULL,
+sex CHAR(6) NOT NULL,
+phone INT NOT NULL,
+CONSTRAINT chk_phone CHECK (phone >= 1000000000 AND phone <= 9999999999));
