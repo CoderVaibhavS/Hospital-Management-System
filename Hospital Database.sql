@@ -1,9 +1,8 @@
--- create hospital database
--- DROP DATABASE HOSPITAL;
+-- -----------------------------------------create hospital database-------------------------------------------
 CREATE DATABASE hospital;
 USE hospital;
 
--- tables definitions 
+-- --------------------------------------------tables definitions----------------------------------------------
 CREATE TABLE patient (
 patient_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 name VARCHAR(20) NOT NULL,
@@ -67,12 +66,94 @@ amount FLOAT NOT NULL,
 FOREIGN KEY (appointment_id) REFERENCES appointment(appointment_id));
 
 CREATE TABLE pays (
-receipt_no INT NOT NULL PRIMARY KEY,
+receipt_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 patient_id INT NOT NULL,
 FOREIGN KEY (receipt_no) REFERENCES bill(receipt_no),
 FOREIGN KEY (patient_id) REFERENCES patient(patient_id));
 
--- insert values in patient table
+-- --------------------------------------------------TRIGGERS--------------------------------------------------
+DELIMITER | 
+CREATE TRIGGER add_gst BEFORE INSERT ON bill
+FOR EACH ROW BEGIN
+SET new.amount = new.amount * 1.18;
+END;
+|
+DELIMITER;
+
+-- ------------------------------------------------PROCEDURES-----------------------------------------------
+DELIMITER |
+CREATE PROCEDURE GENERATE_BILL(IN APPOINTMENT_ID INT, AMOUNT FLOAT)
+BEGIN
+insert into bill (appointment_id, amount) values(APPOINTMENT_ID, AMOUNT);
+INSERT INTO pays (patient_id)
+select patient_id FROM
+appointment
+WHERE appointment_id = appointment.appointment_id;
+END;
+|
+DELIMITER;
+
+DELIMITER |
+CREATE PROCEDURE view_doctors()
+BEGIN
+SELECT * FROM doctor;
+END;
+|
+DELIMITER;
+
+DELIMITER |
+CREATE PROCEDURE view_medical_history()
+BEGIN
+SELECT * FROM records;
+END;
+|
+DELIMITER;
+
+DELIMITER |
+CREATE PROCEDURE doctor_earnings(IN id INT)
+BEGIN
+SELECT SUM(amount) 
+FROM bill 
+JOIN appointment ON bill.appointment_id = appointment.appointment_id 
+JOIN doctor on appointment.doctor_id = doctor.doctor_id
+WHERE id = doctor.doctor_id;
+END;
+|
+DELIMITER;
+
+DELIMITER |
+CREATE PROCEDURE specialisation_earnings(IN specialisation VARCHAR(255))
+BEGIN
+SELECT SUM(amount) 
+FROM bill 
+JOIN appointment ON bill.appointment_id = appointment.appointment_id 
+JOIN doctor on appointment.doctor_id = doctor.doctor_id
+WHERE specialisation = doctor.specialisation;
+END;
+|
+DELIMITER;
+
+DELIMITER |
+CREATE PROCEDURE find_patients(IN id INT)
+BEGIN
+SELECT DISTINCT patient.patient_id, patient.name, patient.age, patient.sex, patient.phone FROM
+patient JOIN appointment ON patient.patient_id = appointment.patient_id
+JOIN doctor ON appointment.doctor_id = doctor.doctor_id
+WHERE doctor.doctor_id = id;
+END;
+|
+DELIMITER;
+
+DELIMITER |
+CREATE PROCEDURE fetch_diagnosis()
+BEGIN
+SELECT * FROM diagnosis;
+END;
+|
+
+DELIMITER ;
+
+-- -----------------------------------ADD PATIENTS-----------------------------------------
 insert into patient (name, age, sex, phone) VALUES ( 'Sanjeev' , 20 , 'male' ,8757740706);
 insert into patient (name, age, sex, phone) values ( 'Vaibhav' , 29 , 'male' ,9767778987);
 insert into patient (name, age, sex, phone) values ( 'Urvashi' , 34 , 'female' ,9757740777);
@@ -104,7 +185,7 @@ insert into patient (name, age, sex, phone) values ( 'Anushka' , 36 , 'female' ,
 insert into patient (name, age, sex, phone) values ( 'Apul' , 55 , 'male' ,8987663170);
 insert into patient (name, age, sex, phone) values ( 'Sheetal' , 42 , 'female' ,8987880656);
 
--- insert values in doctor table
+-- -----------------------------------------ADD DOCTORS-------------------------------------------
 insert into doctor (name, age, sex, specialisation, phone) values ('Vikas',40,'male', 'heart' ,8293445689);
 insert into doctor (name, age, sex, specialisation, phone) values ('Suman',39,'female', 'skin' ,6355667987);
 insert into doctor (name, age, sex, specialisation, phone) values ('Apurv',28,'male', 'brain' ,9987878735);
@@ -115,7 +196,7 @@ insert into doctor (name, age, sex, specialisation, phone) values ('Sonam',36,'f
 insert into doctor (name, age, sex, specialisation, phone) values ('Mamta',35,'female', 'eyes' ,7768189585);
 
 
--- insert values in staff table
+-- -------------------------------------ADD STAFF-----------------------------------------
 insert into staff (name, age, sex, phone, salary) values ('Tony',24,'male',7787646568,340000);
 insert into staff (name, age, sex, phone, salary) values ('Ravi',24,'male',8997646568,540000);
 insert into staff (name, age, sex, phone, salary) values ('Mohan',24,'male',7797646999,230000);
@@ -129,7 +210,7 @@ insert into staff (name, age, sex, phone, salary) values ('Bharti',24,'female',6
 insert into staff (name, age, sex, phone, salary) values ('Manas',24,'male',7978776579,840000);
 insert into staff (name, age, sex, phone, salary) values ('Akshat',24,'male',9898999642,440000);
 
--- insert values in room table
+-- ----------------------------------------ADD ROOMS---------------------------------------------
 insert into room (status, patient_id, staff_id) values ('booked',14, 6);
 insert into room (status, patient_id, staff_id) values ('booked',21, 9);
 insert into room (status, patient_id, staff_id) values ('free',null, null);
@@ -141,7 +222,7 @@ insert into room (status, patient_id, staff_id) values ('booked',12, 4);
 insert into room (status, patient_id, staff_id) values ('free',null, null);
 insert into room (status, patient_id, staff_id) values ('free',null, null);
 
--- insert values in records
+-- --------------------------------------------ADD RECORDS----------------------------------------------
 insert into records values (12,1,'2022-04-013','cough problem');
 insert into records values (12,2,'2023-07-23','blood pressure');
 insert into records values (13,1,'2021-08-14','heart problem');
@@ -163,7 +244,6 @@ insert into records values (11,1,'2020-06-30','dental problem');
 insert into records values (11,2,'2021-07-21','skin problem');
 insert into records values (11,3,'2023-03-05','liver problem');
 insert into records values (30,1,'2023-04-04','heart problem');
-insert into records values (31,1,'2023-09-03','stomach ache');
 insert into records values (2,1,'2022-10-10','cough problem');
 insert into records values (2,2,'2023-08-15','skin problem');
 insert into records values (3,1,'2023-04-14','lung problem');
@@ -174,4 +254,50 @@ insert into records values (22,2,'2023-11-30','dental problem');
 insert into records values (19,2,'2023-05-19','stomach ache');
 insert into records values (27,2,'2022-05-14','blood pressure');
 insert into records values (27,3,'2023-12-04','blood pressure');
-insert into records values (31,2,'2023-08-07','heart problem');
+
+ -- ----------------------------------------------BOOK APPOINTMENTS--------------------------------------------------
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(12,1,'2023-04-06','10:30:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(13,1,'2023-05-23','11:15:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(15,2,'2023-04-12','10:50:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(21,2,'2023-06-14','09:40:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(7,2,'2023-06-26','08:20:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(21,4,'2023-05-16','17:30:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(11,1,'2023-06-27','18:15:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(30,7,'2023-04-05','16:30:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(26,5,'2023-07-28','17:35:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(8,1,'2023-08-10','16:50:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(27,6,'2023-09-22','17:25:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(12,1,'2023-06-17','10:20:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(15,4,'2023-07-01','11:45:00');
+insert into appointment (patient_id, doctor_id, apt_date, apt_time) values(15,2,'2023-07-30','09:05:00');
+
+-- ----------------------------------------ADD DIAGNOSIS DATA-------------------------------------------------
+insert into diagnosis (patient_id, doctor_id, result) values ( 12,1,'successful');
+insert into diagnosis (patient_id, doctor_id, result) values ( 13,1,'pending');
+insert into diagnosis (patient_id, doctor_id, result) values ( 15,2,'pending');
+insert into diagnosis (patient_id, doctor_id, result) values ( 21,2,'successful');
+insert into diagnosis (patient_id, doctor_id, result) values ( 7,2,'successful');
+insert into diagnosis (patient_id, doctor_id, result) values ( 21,4,'successful');
+insert into diagnosis (patient_id, doctor_id, result) values ( 11,1,'pending');
+insert into diagnosis (patient_id, doctor_id, result) values ( 30,7,'successful');
+insert into diagnosis (patient_id, doctor_id, result) values ( 8,1,'successful');
+insert into diagnosis (patient_id, doctor_id, result) values ( 8,1,'pending');
+insert into diagnosis (patient_id, doctor_id, result) values ( 27,6,'successful');
+insert into diagnosis (patient_id, doctor_id, result) values ( 12,1,'successful');
+insert into diagnosis (patient_id, doctor_id, result) values ( 15,4,'successful');
+insert into diagnosis (patient_id, doctor_id, result) values ( 15,2,'successful');
+
+-- ------------------------------------------GENERATE BILLS----------------------------------------------
+CALL generate_bill(1,2400);
+CALL generate_bill(2,400);
+CALL generate_bill(3,204);
+CALL generate_bill(4,2000);
+CALL generate_bill(5,500);
+CALL generate_bill(6,700);
+CALL generate_bill(7,864);
+CALL generate_bill(8,4578);
+CALL generate_bill(9,2345);
+CALL generate_bill(10,2401);
+CALL generate_bill(11,1234);
+CALL generate_bill(12,5678);
+CALL generate_bill(14,1256);
