@@ -16,8 +16,7 @@ name VARCHAR(20) NOT NULL,
 age INT NOT NULL,
 sex CHAR(6) NOT NULL,
 specialisation varchar(15) NOT NULL,
-phone BIGINT NOT NULL CHECK (phone >= 1000000000 AND phone < 10000000000),
-salary BIGINT NOT NULL);
+phone BIGINT NOT NULL CHECK (phone >= 1000000000 AND phone < 10000000000));
 
 CREATE TABLE staff (
 staff_id CHAR(5) NOT NULL PRIMARY KEY,
@@ -46,9 +45,9 @@ FOREIGN KEY (patient_id) REFERENCES patient(patient_id));
 CREATE TABLE appointment (
 patient_id CHAR(5) NOT NULL,
 doctor_id CHAR(5) NOT NULL,
+appointment_id CHAR(5) NOT NULL PRIMARY KEY,
 apt_date DATE NOT NULL,
 apt_time TIME NOT NULL,
-PRIMARY KEY (patient_id, doctor_id),
 FOREIGN KEY (patient_id) REFERENCES patient(patient_id),
 FOREIGN KEY (doctor_id) REFERENCES doctor(doctor_id));
 
@@ -62,14 +61,10 @@ FOREIGN KEY (doctor_id) REFERENCES doctor(doctor_id));
 
 CREATE TABLE bill (
 receipt_no INT NOT NULL PRIMARY KEY,
-pmt_date DATE NOT NULL);
-
-CREATE TABLE bill_particulars (
-name VARCHAR(20) NOT NULL,
-receipt_no INT NOT NULL,
-price FLOAT NOT NULL,
-PRIMARY KEY (receipt_no, name),
-FOREIGN KEY (receipt_no) REFERENCES bill(receipt_no));
+appointment_id CHAR(5) NOT NULL,
+pmt_date DATE NOT NULL,
+amount FLOAT NOT NULL,
+FOREIGN KEY (appointment_id) REFERENCES appointment(appointment_id));
 
 CREATE TABLE pays (
 receipt_no INT NOT NULL PRIMARY KEY,
