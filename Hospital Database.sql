@@ -195,7 +195,6 @@ insert into doctor (name, age, sex, specialisation, phone) values ('Virat',40,'m
 insert into doctor (name, age, sex, specialisation, phone) values ('Sonam',36,'female', 'heart' ,8943785689);
 insert into doctor (name, age, sex, specialisation, phone) values ('Mamta',35,'female', 'eyes' ,7768189585);
 
-
 -- -------------------------------------ADD STAFF-----------------------------------------
 insert into staff (name, age, sex, phone, salary) values ('Tony',24,'male',7787646568,340000);
 insert into staff (name, age, sex, phone, salary) values ('Ravi',24,'male',8997646568,540000);
@@ -300,4 +299,3 @@ CALL generate_bill(9,2345);
 CALL generate_bill(10,2401);
 CALL generate_bill(11,1234);
 CALL generate_bill(12,5678);
-CALL generate_bill(14,1256);
