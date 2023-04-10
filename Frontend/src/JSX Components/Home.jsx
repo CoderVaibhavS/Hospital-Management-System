@@ -8,9 +8,9 @@ export default function Home() {
     <div className='home'>
       <Navbar />
         <div className="options">
-        <button type="button" className="btn btn-light"><Link to='/patient'>Add Patient</Link></button>
-        <button type="button" className="btn btn-light"><Link to='/doctor'>Add Doctor</Link></button>
-        <button type="button" className="btn btn-light"><Link to='/staff'>Add Staff</Link></button>
+        <Link to='/patient'><button type="button" className="btn btn-light">Add Patient</button></Link>
+        <Link to='/doctor'><button type="button" className="btn btn-light">Add Doctor</button></Link>
+        <Link to='/staff'><button type="button" className="btn btn-light">Add Staff</button></Link>
         </div>
     </div>
   )

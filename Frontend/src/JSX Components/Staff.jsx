@@ -30,7 +30,7 @@ export default function Staff() {
   };
 
   return (
-    <div className="doctor">
+    <div className="staff">
       <Navbar />
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

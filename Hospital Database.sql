@@ -75,7 +75,7 @@ FOREIGN KEY (patient_id) REFERENCES patient(patient_id));
 DELIMITER | 
 CREATE TRIGGER add_gst BEFORE INSERT ON bill
 FOR EACH ROW BEGIN
-SET new.amount = new.amount * 1.18;
+SET newbill.amount = new.amount * 1.18;
 END;
 |
 DELIMITER;
@@ -104,7 +104,8 @@ DELIMITER;
 DELIMITER |
 CREATE PROCEDURE view_medical_history()
 BEGIN
-SELECT * FROM records;
+SELECT * FROM patient LEFT JOIN records
+ON patient.patient_id = records.patient_id;
 END;
 |
 DELIMITER;
@@ -112,7 +113,7 @@ DELIMITER;
 DELIMITER |
 CREATE PROCEDURE doctor_earnings(IN id INT)
 BEGIN
-SELECT SUM(amount) 
+SELECT SUM(amount) / 1.18
 FROM bill 
 JOIN appointment ON bill.appointment_id = appointment.appointment_id 
 JOIN doctor on appointment.doctor_id = doctor.doctor_id
@@ -124,7 +125,7 @@ DELIMITER;
 DELIMITER |
 CREATE PROCEDURE specialisation_earnings(IN specialisation VARCHAR(255))
 BEGIN
-SELECT SUM(amount) 
+SELECT SUM(amount) / 1.18
 FROM bill 
 JOIN appointment ON bill.appointment_id = appointment.appointment_id 
 JOIN doctor on appointment.doctor_id = doctor.doctor_id
@@ -188,7 +189,7 @@ insert into patient (name, age, sex, phone) values ( 'Sheetal' , 42 , 'female' ,
 -- -----------------------------------------ADD DOCTORS-------------------------------------------
 insert into doctor (name, age, sex, specialisation, phone) values ('Vikas',40,'male', 'heart' ,8293445689);
 insert into doctor (name, age, sex, specialisation, phone) values ('Suman',39,'female', 'skin' ,6355667987);
-insert into doctor (name, age, sex, specialisation, phone) values ('Apurv',28,'male', 'brain' ,9987878735);
+insert into doctor (name, age, sex, specialisation, phone) values ('Apurv',28,'male', 'neuro' ,9987878735);
 insert into doctor (name, age, sex, specialisation, phone) values ('Bhavna',32,'female', 'neuro' ,8987445690);
 insert into doctor (name, age, sex, specialisation, phone) values ('Tanmay',46,'male', 'stomach' ,7760895585);
 insert into doctor (name, age, sex, specialisation, phone) values ('Virat',40,'male', 'dental' ,9834567894);
@@ -222,7 +223,7 @@ insert into room (status, patient_id, staff_id) values ('free',null, null);
 insert into room (status, patient_id, staff_id) values ('free',null, null);
 
 -- --------------------------------------------ADD RECORDS----------------------------------------------
-insert into records values (12,1,'2022-04-013','cough problem');
+insert into records values (12,1,'2022-04-13','cough problem');
 insert into records values (12,2,'2023-07-23','blood pressure');
 insert into records values (13,1,'2021-08-14','heart problem');
 insert into records values (14,1,'2022-02-05','lung problem');

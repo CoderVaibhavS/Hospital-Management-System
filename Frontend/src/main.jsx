@@ -9,6 +9,12 @@ import './index.css'
 import Patient from './JSX Components/Patient';
 import Doctor from './JSX Components/Doctor';
 import Staff from './JSX Components/Staff';
+import Bill from './JSX Components/Bill';
+import Appointment from './JSX Components/Appointment';
+import Room from './JSX Components/Room';
+import Diagnosis from './JSX Components/Diagnosis';
+import Admin from './JSX Components/Admin';
+import Record from './JSX Components/Record';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +32,30 @@ const router = createBrowserRouter([
   {
     path: "/staff",
     element: <Staff />,
+  },
+  {
+    path: "/appointment",
+    element: <Appointment />,
+  },
+  {
+    path: "/diagnosis",
+    element: <Diagnosis />,
+  },
+  {
+    path: "/record",
+    element: <Record />,
+  },
+  {
+    path: "/bill",
+    element: <Bill />,
+  },
+  {
+    path: "/room",
+    element: <Room />,
+  },
+  {
+    path: "/admin",
+    element: <Admin />,
   },
 ]);
 

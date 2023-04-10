@@ -1,8 +1,8 @@
 -- query 1
-INSERT INTO doctor VALUES (980, 'Nitin', 47, 'Male', 'Cardiac', 9876543210);
+INSERT INTO doctor VALUES (9, 'Nitin', 47, 'Male', 'Cardiac', 9876543210);
 
 -- query 2
-INSERT INTO records VALUES (12536, 2, '2023-04-06', 'fever');
+INSERT INTO records VALUES (12, 2, '2023-04-06', 'fever');
 
 -- query 3
 INSERT INTO staff VALUES (12826, 'Priya', 29, 'Female', 9829104820, 1000000);
@@ -22,14 +22,14 @@ WHERE appointment_id = 1;
 
 -- query 6
 UPDATE room SET status = 'booked', 
-patient_id = 12536, 
-staff_id = 12826 
+patient_id = 12, 
+staff_id = 12
 WHERE status = 'free'
 LIMIT 1;
 
 -- query 7
 UPDATE room SET
-staff_id = 12826
+staff_id = 12
 WHERE room_no = 2;
 
 -- query 8
@@ -64,11 +64,12 @@ SELECT * FROM doctor;
 
 -- query 11
 CREATE PROCEDURE view_medical_history()
-SELECT * FROM records;
+SELECT * FROM patient LEFT JOIN records
+ON patient.patient_id = records.patient_id;
 
 -- query 12
 CREATE PROCEDURE doctor_earnings(IN id INT)
-SELECT SUM(amount) 
+SELECT SUM(amount) / 1.18 
 FROM bill 
 JOIN appointment ON bill.appointment_id = appointment.appointment_id 
 JOIN doctor on appointment.doctor_id = doctor.doctor_id
@@ -76,14 +77,13 @@ WHERE id = doctor.doctor_id;
 
 -- query 13
 CREATE PROCEDURE specialisation_earnings(IN specialisation VARCHAR(255))
-SELECT SUM(amount) 
+SELECT SUM(amount) / 1.18
 FROM bill 
 JOIN appointment ON bill.appointment_id = appointment.appointment_id 
 JOIN doctor on appointment.doctor_id = doctor.doctor_id
 WHERE specialisation = doctor.specialisation;
 
 -- query 14
-drop procedure find_patients;
 CREATE PROCEDURE find_patients(IN id INT)
 SELECT DISTINCT patient.patient_id, patient.name, patient.age, patient.sex, patient.phone FROM
 patient JOIN appointment ON patient.patient_id = appointment.patient_id
