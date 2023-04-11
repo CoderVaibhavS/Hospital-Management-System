@@ -27,6 +27,6 @@ Steps:
 Note: Steps 5 and 7 should be done in separate terminal window simultaneously.
    
 In your browser, open the url: http://localhost:8081
-If it shows an error, run the following query in MySQL: ALTER USER 'user'@'localhost' IDENTIFIED WITH BY 'password'; and do npm start in the Backend directory again. The app is now hosted at localhost:8081
+If it shows an error, run the following query in MySQL: ALTER USER 'user'@'localhost' IDENTIFIED BY 'password'; and do npm start in the Backend directory again. The app is now hosted at localhost:8081
 
 Finally, open the url generated in the 5th step in your browser.
