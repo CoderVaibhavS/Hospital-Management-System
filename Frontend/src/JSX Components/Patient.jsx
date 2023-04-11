@@ -31,6 +31,7 @@ export default function Patient() {
     <div className="patient">
       <Navbar />
       <form onSubmit={handleSubmit}>
+        <h1>Add Patient</h1>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name

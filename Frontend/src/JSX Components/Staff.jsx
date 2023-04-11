@@ -33,6 +33,7 @@ export default function Staff() {
     <div className="staff">
       <Navbar />
       <form onSubmit={handleSubmit}>
+        <h1>Add Staff</h1>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name

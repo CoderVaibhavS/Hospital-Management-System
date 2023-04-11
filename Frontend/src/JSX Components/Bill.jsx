@@ -27,6 +27,7 @@ export default function Bill() {
     <div className="bill">
       <Navbar />
       <form onSubmit={handleSubmit}>
+        <h1>Bill</h1>
         <div className="mb-3">
           <label htmlFor="aptid" className="form-label">
             Appointment ID

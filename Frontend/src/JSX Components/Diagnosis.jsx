@@ -29,6 +29,7 @@ export default function Diagnosis() {
     <div className="diagnosis">
       <Navbar />
       <form onSubmit={handleSubmit}>
+        <h1>Diagnosis</h1>
         <div className="mb-3">
           <label htmlFor="patient" className="form-label">
             Patient ID

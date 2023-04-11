@@ -1,16 +1,16 @@
 -- -----------------------------------------create hospital database-------------------------------------------
-CREATE DATABASE hospital;
+CREATE DATABASE IF NOT EXISTS hospital;
 USE hospital;
 
 -- --------------------------------------------tables definitions----------------------------------------------
-CREATE TABLE patient (
+CREATE TABLE IF NOT EXISTS patient (
 patient_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 name VARCHAR(20) NOT NULL,
 age INT NOT NULL,
 sex CHAR(6) NOT NULL,
 phone BIGINT NOT NULL CHECK (phone >= 1000000000 AND phone < 10000000000));
 
-CREATE TABLE doctor (
+CREATE TABLE IF NOT EXISTS doctor (
 doctor_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 name VARCHAR(20) NOT NULL,
 age INT NOT NULL,
@@ -18,7 +18,7 @@ sex CHAR(6) NOT NULL,
 specialisation varchar(15) NOT NULL,
 phone BIGINT NOT NULL CHECK (phone >= 1000000000 AND phone < 10000000000));
 
-CREATE TABLE staff (
+CREATE TABLE IF NOT EXISTS staff (
 staff_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 name VARCHAR(20) NOT NULL,
 age INT NOT NULL,
@@ -26,15 +26,15 @@ sex CHAR(6) NOT NULL,
 phone BIGINT NOT NULL CHECK (phone >= 1000000000 AND phone < 10000000000),
 salary BIGINT NOT NULL);
 
-CREATE TABLE room (
+CREATE TABLE IF NOT EXISTS room (
 room_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 status CHAR(6) NOT NULL,
-patient_id INT,
-staff_id INT,
+patient_id INT UNIQUE,
+staff_id INT UNIQUE,
 FOREIGN KEY (patient_id) REFERENCES patient(patient_id),
 FOREIGN KEY (staff_id) REFERENCES staff(staff_id));
 
-CREATE TABLE records (
+CREATE TABLE IF NOT EXISTS records (
 patient_id INT NOT NULL,
 record_no INT NOT NULL,
 date_of_examination DATE NOT NULL,
@@ -42,7 +42,7 @@ problem VARCHAR(255) NOT NULL,
 PRIMARY KEY (patient_id, record_no),
 FOREIGN KEY (patient_id) REFERENCES patient(patient_id));
 
-CREATE TABLE appointment (
+CREATE TABLE IF NOT EXISTS appointment (
 patient_id INT NOT NULL,
 doctor_id INT NOT NULL,
 appointment_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -51,7 +51,7 @@ apt_time TIME NOT NULL,
 FOREIGN KEY (patient_id) REFERENCES patient(patient_id),
 FOREIGN KEY (doctor_id) REFERENCES doctor(doctor_id));
 
-CREATE TABLE diagnosis (
+CREATE TABLE IF NOT EXISTS diagnosis (
 diagnosis_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 patient_id INT NOT NULL,
 doctor_id INT NOT NULL,
@@ -59,13 +59,13 @@ result VARCHAR(255) NOT NULL,
 FOREIGN KEY (patient_id) REFERENCES patient(patient_id),
 FOREIGN KEY (doctor_id) REFERENCES doctor(doctor_id));
 
-CREATE TABLE bill (
+CREATE TABLE IF NOT EXISTS bill (
 receipt_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 appointment_id INT NOT NULL,
 amount FLOAT NOT NULL,
 FOREIGN KEY (appointment_id) REFERENCES appointment(appointment_id));
 
-CREATE TABLE pays (
+CREATE TABLE IF NOT EXISTS pays (
 receipt_no INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 patient_id INT NOT NULL,
 FOREIGN KEY (receipt_no) REFERENCES bill(receipt_no),
@@ -75,7 +75,7 @@ FOREIGN KEY (patient_id) REFERENCES patient(patient_id));
 DELIMITER | 
 CREATE TRIGGER add_gst BEFORE INSERT ON bill
 FOR EACH ROW BEGIN
-SET newbill.amount = new.amount * 1.18;
+SET new.amount = new.amount * 1.18;
 END;
 |
 DELIMITER;

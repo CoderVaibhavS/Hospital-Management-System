@@ -45,6 +45,7 @@ export default function Room() {
       <Navbar />
       <div className="forms">
       <form onSubmit={handleSubmit1}>
+        <h1>Book</h1>
         <div className="mb-3">
           <label htmlFor="patient" className="form-label">
             Patient ID
@@ -63,6 +64,7 @@ export default function Room() {
         </button>
       </form>
       <form onSubmit={handleSubmit2}>
+        <h1>Free</h1>
         <div className="mb-3">
           <label htmlFor="room" className="form-label">
             Room No

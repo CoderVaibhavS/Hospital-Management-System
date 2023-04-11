@@ -31,6 +31,7 @@ export default function Record() {
     <div className="record">
       <Navbar />
       <form onSubmit={handleSubmit}>
+        <h1>Record</h1>
         <div className="mb-3">
           <label htmlFor="patient" className="form-label">
             Patient ID

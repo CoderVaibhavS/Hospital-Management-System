@@ -33,6 +33,7 @@ export default function Doctor() {
     <div className="doctor">
       <Navbar />
       <form onSubmit={handleSubmit}>
+        <h1>Add Doctor</h1>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name
