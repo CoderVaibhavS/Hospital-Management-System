@@ -2,7 +2,7 @@
 
 How to start the project at your localhost?
 
-Requirements: NodeJS, NPM package managera and mySQL
+Requirements: NodeJS, NPM package manager and mySQL
 
 In MySQL workbench, run the SQL file 'Hospital Database.sql'
 
