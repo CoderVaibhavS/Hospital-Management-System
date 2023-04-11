@@ -72,6 +72,7 @@ FOREIGN KEY (receipt_no) REFERENCES bill(receipt_no),
 FOREIGN KEY (patient_id) REFERENCES patient(patient_id));
 
 -- --------------------------------------------------TRIGGERS--------------------------------------------------
+-- add 18% gst before adding the row in the bill
 DELIMITER | 
 CREATE TRIGGER add_gst BEFORE INSERT ON bill
 FOR EACH ROW BEGIN
@@ -81,6 +82,7 @@ END;
 DELIMITER;
 
 -- ------------------------------------------------PROCEDURES-----------------------------------------------
+-- for generating bill, this adds data in both bill and pays table simultaneously
 DELIMITER |
 CREATE PROCEDURE GENERATE_BILL(IN APPOINTMENT_ID INT, AMOUNT FLOAT)
 BEGIN
@@ -93,6 +95,7 @@ END;
 |
 DELIMITER;
 
+-- for viewing all the doctors
 DELIMITER |
 CREATE PROCEDURE view_doctors()
 BEGIN
@@ -101,6 +104,7 @@ END;
 |
 DELIMITER;
 
+-- view the records of each patient
 DELIMITER |
 CREATE PROCEDURE view_medical_history()
 BEGIN
@@ -110,6 +114,7 @@ END;
 |
 DELIMITER;
 
+-- calculate the doctor earning based on the amount paid by patients for their appointments and subtract the amount added due to gst
 DELIMITER |
 CREATE PROCEDURE doctor_earnings(IN id INT)
 BEGIN
@@ -122,6 +127,7 @@ END;
 |
 DELIMITER;
 
+-- earnings categorized by specialisation, calculated similar to previous one
 DELIMITER |
 CREATE PROCEDURE specialisation_earnings(IN specialisation VARCHAR(255))
 BEGIN
@@ -134,6 +140,7 @@ END;
 |
 DELIMITER;
 
+-- find patients who are treated by a specific doctor by joining appointment, patient and doctor tables
 DELIMITER |
 CREATE PROCEDURE find_patients(IN id INT)
 BEGIN
@@ -145,6 +152,7 @@ END;
 |
 DELIMITER;
 
+-- fetch all the records stored in the diagnosis table
 DELIMITER |
 CREATE PROCEDURE fetch_diagnosis()
 BEGIN
